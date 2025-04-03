@@ -1,0 +1,49 @@
+datasource db {
+  provider = "mongodb"
+  url      = "mongodb+srv://bilalshehroz420:00000@cluster0.wru7job.mongodb.net/wusle?retryWrites=true&w=majority" 
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String?
+  name      String?
+  createdAt DateTime @default(now())
+  wuslePurchased Float @default(0)
+  spent     Float      @default(0)
+
+  // For password reset
+  passwordResetToken   String?
+  passwordResetExpires DateTime?
+}
+
+
+model PresaleStage {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  stageNumber  Int
+  startTime    DateTime
+  endTime      DateTime
+  rate         Float
+  listingPrice Float
+  target       Float
+  raised       Float    @default(0)
+  createdAt    DateTime @default(now())
+}
+
+
+model Slip {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId           String
+  walletAddress    String
+  currency         String   // e.g. "USDT" or "SOL"
+  amountPaid       Float
+  wuslePurchased   Float    // how many WUSLE they bought
+  redeemCode       String   @unique
+  isRedeemed       Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  redeemedAt       DateTime?
+}
